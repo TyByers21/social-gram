@@ -6,7 +6,7 @@ import { Routes, Route } from 'react-router-dom'
 
 import RootLayout from './_root/RootLayout'
 import AuthLayout from './_auth/AuthLayout.tsx';
-
+import { Toaster } from "@/components/ui/toaster"
 
 
 const App = () => {
@@ -20,10 +20,10 @@ const App = () => {
 
           <Route element={<RootLayout />}>
               <Route index element = {< Home />} />
-          </Route>
-          
+          </Route>          
     </Routes>
-            </main>
+    <Toaster />
+    </main>
   )
 }
 
