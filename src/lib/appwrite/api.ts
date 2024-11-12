@@ -62,7 +62,7 @@ export async function getCurrentUser() {
     try {
         const currentAccount = await account.get();
 
-        if(!currentAccount) throw Error;
+        if (!currentAccount) throw new Error('No active session found');
 
         const currentUser = await databases.listDocuments(
             appwriteConfig.databaseId,
@@ -70,9 +70,20 @@ export async function getCurrentUser() {
             [Query.equal('accountId', currentAccount.$id)]
         );
 
-        if(!currentUser) throw Error;
+        if (!currentUser.documents.length) throw new Error('User not found in database');
 
         return currentUser.documents[0];
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+export async function signOutAccount() {
+    try {
+        const session = await account.deleteSession('current')
+
+        return session;
     } catch (error) {
         console.log(error)
     }
