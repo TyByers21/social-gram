@@ -57,6 +57,7 @@ import {
   
   export const useGetPosts = () => {
     return useInfiniteQuery({
+      initialPageParam: null,
       queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
       queryFn: getInfinitePosts as any,
       getNextPageParam: (lastPage: any) => {

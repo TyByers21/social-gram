@@ -1,5 +1,5 @@
 export type INavLink = {
-    imgURL: string;
+    imgURL: URL | string;
     route: string;
     label: string;
   };
@@ -36,7 +36,7 @@ export type INavLink = {
     name: string;
     username: string;
     email: string;
-    imageUrl: string;
+    imageUrl: URL;
     bio: string;
   };
   

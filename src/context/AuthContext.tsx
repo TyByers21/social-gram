@@ -24,7 +24,7 @@ const INITIAL_STATE = {
 
 type IContextType = {
   user: IUser;
-  isLoading: boolean;
+  isPending: boolean;
   setUser: React.Dispatch<React.SetStateAction<IUser>>;
   isAuthenticated: boolean;
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
