@@ -1,5 +1,5 @@
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { useSignOutAccount } from "@/lib/react-query/queriesAndMutations";
+
 import { INavLink } from "@/types";
 
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { useUserContext, INITIAL_USER } from "@/context/AuthContext";
 
 import { sidebarLinks } from "@/constants";
 import Loader from './Loader';
+import { useSignOutAccount } from "@/lib/react-query/queries";
 
 
 
@@ -14,7 +15,7 @@ import Loader from './Loader';
 const LeftSidebar = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { user, setUser, setIsAuthenticated, isLoading } = useUserContext();
+  const { user, setUser, setIsAuthenticated, isPending } = useUserContext();
 
   const { mutate: signOut } = useSignOutAccount();
 
@@ -40,7 +41,7 @@ const LeftSidebar = () => {
           />
         </Link>
 
-        {isLoading || !user.email ? (
+        {isPending || !user.email ? (
           <div className="h-14">
             <Loader />
           </div>
