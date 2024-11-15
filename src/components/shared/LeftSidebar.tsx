@@ -1,16 +1,11 @@
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 
 import { INavLink } from "@/types";
-
-import { Button } from "@/components/ui/button";
-import { useUserContext, INITIAL_USER } from "@/context/AuthContext";
-
 import { sidebarLinks } from "@/constants";
-import Loader from './Loader';
+import { Loader } from "@/components/shared";
+import { Button } from "@/components/ui/button";
 import { useSignOutAccount } from "@/lib/react-query/queries";
-
-
-
+import { useUserContext, INITIAL_USER } from "@/context/AuthContext";
 
 const LeftSidebar = () => {
   const navigate = useNavigate();
@@ -34,10 +29,10 @@ const LeftSidebar = () => {
       <div className="flex flex-col gap-11">
         <Link to="/" className="flex gap-3 items-center">
           <img
-            src="/assets/images/SGlogo.png"
+            src="/assets/images/logo.svg"
             alt="logo"
-            width={189}
-            height={50}
+            width={170}
+            height={36}
           />
         </Link>
 
@@ -53,7 +48,7 @@ const LeftSidebar = () => {
               className="h-14 w-14 rounded-full"
             />
             <div className="flex flex-col">
-              <p className="body-bold">{user.username}</p>
+              <p className="body-bold">{user.name}</p>
               <p className="small-regular text-light-3">@{user.username}</p>
             </div>
           </Link>
