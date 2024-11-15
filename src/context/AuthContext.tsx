@@ -4,14 +4,16 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { IUser } from "@/types";
 import { getCurrentUser } from "@/lib/appwrite/api";
 
-export const INITIAL_USER = {
+// Assuming INITIAL_USER is defined as follows
+export const INITIAL_USER: IUser = {
   id: "",
   name: "",
   username: "",
   email: "",
-  imageUrl: URL,
+  imageUrl: "",  // Ensure this is a string
   bio: "",
 };
+
 
 const INITIAL_STATE = {
   user: INITIAL_USER,
