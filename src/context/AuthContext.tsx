@@ -9,7 +9,7 @@ export const INITIAL_USER = {
   name: "",
   username: "",
   email: "",
-  imageUrl: "",
+  imageUrl: URL,
   bio: "",
 };
 
