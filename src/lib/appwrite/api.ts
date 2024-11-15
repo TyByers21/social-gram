@@ -41,7 +41,7 @@ export async function saveUserToDB(user: {
   accountId: string;
   email: string;
   name: string;
-  imageUrl: URL;
+  imageUrl: URL | string;
   username?: string;
 }) {
   try {
@@ -183,9 +183,7 @@ export function getFilePreview(fileId: string) {
       appwriteConfig.storageId,
       fileId,
       2000,
-      2000,
-      "top",
-      100
+      2000,      
     );
 
     if (!fileUrl) throw Error;

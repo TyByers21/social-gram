@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import Input  from "@/components/ui/input";
+import {Input}  from "@/components/ui/input";
 
 import Loader from "@/components/shared/Loader";
 import { useGetPosts, useSearchPosts } from "@/lib/react-query/queries";
