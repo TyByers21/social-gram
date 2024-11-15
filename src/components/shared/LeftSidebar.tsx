@@ -24,8 +24,6 @@ const LeftSidebar = () => {
   const imageUrl =
     typeof user.imageUrl === "string"
       ? user.imageUrl
-      : user.imageUrl instanceof URL
-      ? user.imageUrl.href // use `href` if it's a URL
       : "/assets/icons/profile-placeholder.svg";
 
   return (
