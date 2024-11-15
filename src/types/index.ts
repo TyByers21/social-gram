@@ -36,7 +36,7 @@ export type INavLink = {
     name: string;
     username: string;
     email: string;
-    imageUrl: URL | string;
+    imageUrl: string;
     bio: string;
   };
   

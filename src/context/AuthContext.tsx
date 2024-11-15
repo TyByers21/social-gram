@@ -17,7 +17,7 @@ export const INITIAL_USER: IUser = {
 
 const INITIAL_STATE = {
   user: INITIAL_USER,
-  isLoading: false,
+  isPending: false,
   isAuthenticated: false,
   setUser: () => {},
   setIsAuthenticated: () => {},
