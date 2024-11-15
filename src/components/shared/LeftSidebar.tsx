@@ -38,15 +38,12 @@ const LeftSidebar = () => {
           </div>
         ) : (
           <Link to={`/profile/${user.id}`} className="flex gap-3 items-center">
-            <img
-              src={
-                typeof user.imageUrl === "string"
-                  ? user.imageUrl
-                  : "/assets/icons/profile-placeholder.svg"
-              }
-              alt="profile"
-              className="h-14 w-14 rounded-full"
-            />
+          <img
+          src={typeof user.imageUrl === "string" ? user.imageUrl : user.imageUrl?.toString() ?? "/assets/icons/profile-placeholder.svg"}
+          alt="profile"
+          className="h-14 w-14 rounded-full"
+        />
+        
             <div className="flex flex-col">
               <p className="body-bold">{user.name}</p>
               <p className="small-regular text-light-3">@{user.username}</p>

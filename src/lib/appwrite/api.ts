@@ -133,14 +133,16 @@ export async function uploadFile(file: File) {
   }
 }
 
-export function getFilePreview(fileId: string) {
+export function getFilePreview(fileId: string): URL | null {
   try {
-    return storage.getFilePreview(appwriteConfig.storageId, fileId, 2000, 2000);
+    const filePreviewUrl = storage.getFilePreview(appwriteConfig.storageId, fileId, 2000, 2000);
+    return new URL(filePreviewUrl); // Convert string to URL
   } catch (error) {
     console.error("Error getting file preview:", error);
     return null;
   }
 }
+
 
 export async function deleteFile(fileId: string) {
   try {
