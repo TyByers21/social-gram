@@ -1,13 +1,9 @@
 import { ID, Query } from "appwrite";
-
 import { appwriteConfig, account, databases, storage, avatars } from "./config";
 import { IUpdatePost, INewPost, INewUser, IUpdateUser } from "@/types";
 
-// ============================================================
 // AUTH
-// ============================================================
 
-// ============================== SIGN UP
 export async function createUserAccount(user: INewUser) {
   try {
     const newAccount = await account.create(
@@ -17,126 +13,99 @@ export async function createUserAccount(user: INewUser) {
       user.name
     );
 
-    if (!newAccount) throw Error;
-
     const avatarUrl = avatars.getInitials(user.name);
-
-    const newUser = await saveUserToDB({
+    return await saveUserToDB({
       accountId: newAccount.$id,
       name: newAccount.name,
       email: newAccount.email,
       username: user.username,
       imageUrl: avatarUrl,
     });
-
-    return newUser;
   } catch (error) {
-    console.log(error);
-    return error;
+    console.error("Error creating user account:", error);
+    return null;
   }
 }
 
-// ============================== SAVE USER TO DB
 export async function saveUserToDB(user: {
   accountId: string;
   email: string;
   name: string;
-  imageUrl: URL | string;
+  imageUrl: string;
   username?: string;
 }) {
   try {
-    const newUser = await databases.createDocument(
+    return await databases.createDocument(
       appwriteConfig.databaseId,
       appwriteConfig.userCollectionId,
       ID.unique(),
-      user,
+      user
     );
-
-    return newUser;
   } catch (error) {
-    console.log(error);
+    console.error("Error saving user to DB:", error);
+    return null;
   }
 }
 
-// ============================== SIGN IN
 export async function signInAccount(user: { email: string; password: string }) {
   try {
-    const session = await account.createEmailPasswordSession(user.email, user.password);
-
-    return session;
+    return await account.createEmailPasswordSession(user.email, user.password);
   } catch (error) {
-    console.log(error);
+    console.error("Error signing in:", error);
+    return null;
   }
 }
 
-// ============================== GET ACCOUNT
 export async function getAccount() {
   try {
-    const currentAccount = await account.get();
-
-    return currentAccount;
+    return await account.get();
   } catch (error) {
-    console.log(error);
+    console.error("Error getting account:", error);
+    return null;
   }
 }
 
-// ============================== GET USER
 export async function getCurrentUser() {
   try {
     const currentAccount = await getAccount();
-
-    if (!currentAccount) throw Error;
+    if (!currentAccount) throw new Error("Account not found");
 
     const currentUser = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.userCollectionId,
       [Query.equal("accountId", currentAccount.$id)]
     );
-
-    if (!currentUser) throw Error;
-
-    return currentUser.documents[0];
+    return currentUser.documents[0] || null;
   } catch (error) {
-    console.log(error);
+    console.error("Error getting current user:", error);
     return null;
   }
 }
 
-// ============================== SIGN OUT
 export async function signOutAccount() {
   try {
-    const session = await account.deleteSession("current");
-
-    return session;
+    return await account.deleteSession("current");
   } catch (error) {
-    console.log(error);
+    console.error("Error signing out:", error);
+    return null;
   }
 }
 
-// ============================================================
 // POSTS
-// ============================================================
 
-// ============================== CREATE POST
 export async function createPost(post: INewPost) {
   try {
-    // Upload file to appwrite storage
     const uploadedFile = await uploadFile(post.file[0]);
+    if (!uploadedFile) throw new Error("File upload failed");
 
-    if (!uploadedFile) throw Error;
-
-    // Get file url
     const fileUrl = getFilePreview(uploadedFile.$id);
     if (!fileUrl) {
       await deleteFile(uploadedFile.$id);
-      throw Error;
+      throw new Error("File preview generation failed");
     }
 
-    // Convert tags into array
     const tags = post.tags?.replace(/ /g, "").split(",") || [];
-
-    // Create post
-    const newPost = await databases.createDocument(
+    return await databases.createDocument(
       appwriteConfig.databaseId,
       appwriteConfig.postCollectionId,
       ID.unique(),
@@ -149,61 +118,40 @@ export async function createPost(post: INewPost) {
         tags: tags,
       }
     );
-
-    if (!newPost) {
-      await deleteFile(uploadedFile.$id);
-      throw Error;
-    }
-
-    return newPost;
   } catch (error) {
-    console.log(error);
+    console.error("Error creating post:", error);
+    return null;
   }
 }
 
-// ============================== UPLOAD FILE
 export async function uploadFile(file: File) {
   try {
-    const uploadedFile = await storage.createFile(
-      appwriteConfig.storageId,
-      ID.unique(),
-      file
-    );
-
-    return uploadedFile;
+    return await storage.createFile(appwriteConfig.storageId, ID.unique(), file);
   } catch (error) {
-    console.log(error);
+    console.error("Error uploading file:", error);
+    return null;
   }
 }
 
-// ============================== GET FILE URL
 export function getFilePreview(fileId: string) {
   try {
-    const fileUrl = storage.getFilePreview(
-      appwriteConfig.storageId,
-      fileId,
-      2000,
-      2000,      
-    );
-
-    if (!fileUrl) throw Error;
-
-    return fileUrl;
+    return storage.getFilePreview(appwriteConfig.storageId, fileId, 2000, 2000);
   } catch (error) {
-    console.log(error);
+    console.error("Error getting file preview:", error);
+    return null;
   }
 }
 
-// ============================== DELETE FILE
 export async function deleteFile(fileId: string) {
   try {
     await storage.deleteFile(appwriteConfig.storageId, fileId);
-
     return { status: "ok" };
   } catch (error) {
-    console.log(error);
+    console.error("Error deleting file:", error);
+    return null;
   }
 }
+
 
 // ============================== GET POSTS
 export async function searchPosts(searchTerm: string) {
